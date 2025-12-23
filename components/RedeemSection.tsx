@@ -1,49 +1,65 @@
 import React, { useState } from 'react';
-import { Gift, ArrowRight, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
+import { Gift, ArrowRight, AlertCircle, CheckCircle, Loader2, Sparkles, Zap } from 'lucide-react';
 import { User, GiftCode } from '../types';
-// Firebase Imports
+// --- FIREBASE LIVE IMPORTS ---
+// हम यहाँ आपके द्वारा सेटअप किए गए रीयल-टाइम डेटाबेस और फ़ायरस्टोर सिंक का उपयोग कर रहे हैं।
 import { rtdb, saveUserToLive } from '../firebase';
-import { ref, get, set, update } from 'firebase/database';
+import { ref, get, update } from 'firebase/database';
 
 interface Props {
   user: User;
   onSuccess: (updatedUser: User) => void;
 }
 
+/**
+ * RedeemSection Component:
+ * यह हिस्सा छात्रों को एडमिन द्वारा दिए गए रिडीम कोड का उपयोग करने की अनुमति देता है।
+ * अब यह पूरी तरह से क्लाउड-आधारित है, जिससे कोड कहीं भी इस्तेमाल किया जा सकता है।
+ */
 export const RedeemSection: React.FC<Props> = ({ user, onSuccess }) => {
+  // --- LOCAL STATES FOR UI CONTROL ---
   const [code, setCode] = useState('');
   const [status, setStatus] = useState<'IDLE' | 'LOADING' | 'SUCCESS' | 'ERROR'>('IDLE');
   const [msg, setMsg] = useState('');
 
+  /**
+   * handleRedeem Function:
+   * यह फंक्शन कोड की वैधता की जाँच करता है और छात्र के क्रेडिट्स को लाइव अपडेट करता है।
+   */
   const handleRedeem = async () => {
-    const cleanCode = code.trim().toUpperCase();
+    const cleanCode = code.trim().toUpperCase(); // कोड को साफ़ और बड़े अक्षरों में करना
+    
+    // अगर कोड खाली है तो कुछ न करें
     if (!cleanCode) return;
-
+    
     setStatus('LOADING');
+    setMsg('Checking code with cloud database...');
     
     try {
-        // 1. Firebase Realtime Database से कोड चेक करें
+        // --- STEP 1: FETCH CODE FROM FIREBASE RTDB ---
+        // हम 'redeem_codes' नोड में इस विशिष्ट कोड को ढूँढ रहे हैं।
         const codeRef = ref(rtdb, `redeem_codes/${cleanCode}`);
         const snapshot = await get(codeRef);
 
+        // यदि कोड डेटाबेस में मौजूद नहीं है
         if (!snapshot.exists()) {
             setStatus('ERROR');
-            setMsg('Invalid Code. Please check and try again.');
+            setMsg('Invalid Gift Code. Please contact Ehsan Sir for a valid code.');
             return;
         }
 
         const targetCode = snapshot.val() as GiftCode;
 
-        // 2. चेक करें कि कोड पहले इस्तेमाल तो नहीं हुआ
+        // --- STEP 2: CHECK REDEMPTION STATUS ---
+        // हम यह सुनिश्चित करते हैं कि एक कोड दो बार इस्तेमाल न हो सके।
         if (targetCode.isRedeemed) {
             setStatus('ERROR');
-            setMsg('This code has already been redeemed.');
+            setMsg('This unique code has already been used by another student.');
             return;
         }
 
-        // --- SUCCESS LOGIC (LIVE SYNC) ---
-
-        // 3. Firebase में कोड को 'Redeemed' मार्क करें
+        // --- STEP 3: LIVE REDEMPTION PROCESS ---
+        // 1. क्लाउड में कोड को 'Redeemed' के रूप में मार्क करें।
         await update(codeRef, {
             isRedeemed: true,
             redeemedBy: user.id,
@@ -51,80 +67,107 @@ export const RedeemSection: React.FC<Props> = ({ user, onSuccess }) => {
             redeemedDate: new Date().toISOString()
         });
 
-        // 4. छात्र के Credits अपडेट करें
-        const amountToAdd = Number(targetCode.amount) || 0;
+        // 2. छात्र के क्रेडिट्स की गणना करें।
+        const creditAmount = Number(targetCode.amount) || 0;
         const updatedUser: User = { 
             ...user, 
-            credits: (Number(user.credits) || 0) + amountToAdd, 
+            credits: (Number(user.credits) || 0) + creditAmount, 
             redeemedCodes: [...(user.redeemedCodes || []), cleanCode] 
         };
         
-        // 5. अपडेटेड यूज़र को Firestore Cloud में सेव करें
+        // --- STEP 4: SYNC UPDATED USER TO FIRESTORE ---
+        // यह सबसे ज़रूरी स्टेप है जिससे एडमिन को छात्र के नए क्रेडिट्स तुरंत दिखेंगे।
         await saveUserToLive(updatedUser);
         
-        // लोकल स्टोरेज अपडेट करें ताकि ऐप तुरंत रिफ्लेक्ट करे
+        // बैकअप के लिए लोकल स्टोरेज को भी अपडेट करें
         localStorage.setItem('nst_current_user', JSON.stringify(updatedUser));
 
+        // सफलता का संदेश दिखाएँ
         setStatus('SUCCESS');
-        setMsg(`Success! 🎉 Added ${amountToAdd} Credits to your account.`);
-        setCode('');
+        setMsg(`🎉 Congratulations! ${creditAmount} Credits added to your account.`);
+        setCode(''); // इनपुट फील्ड साफ़ करें
+        
+        // पैरेंट कंपोनेंट (App.tsx) को सूचित करें
         onSuccess(updatedUser);
         
-        // 3 सेकंड बाद मैसेज हटा दें
+        // 4 सेकंड बाद UI को वापस सामान्य करें
         setTimeout(() => {
             setStatus('IDLE');
             setMsg('');
-        }, 3000);
+        }, 4000);
 
     } catch (error) {
-        console.error("Redeem Error:", error);
+        // नेटवर्क या डेटाबेस एरर हैंडलिंग
+        console.error("Redemption Critical Error:", error);
         setStatus('ERROR');
-        setMsg('Connection failed. Please try again later.');
+        setMsg('Cloud connection failed. Please check your internet and try again.');
     }
   };
 
   return (
-    <div className="bg-white rounded-[32px] p-8 border-2 border-slate-50 shadow-xl shadow-slate-100/50 mt-6 animate-in slide-in-from-bottom-4">
-        <div className="flex items-center gap-4 mb-6">
-            <div className="bg-gradient-to-br from-purple-500 to-indigo-600 p-3 rounded-2xl text-white shadow-lg shadow-purple-200">
-                <Gift size={28} />
+    <div className="bg-white rounded-[32px] p-8 border-2 border-slate-50 shadow-2xl shadow-slate-200/50 mt-8 animate-in slide-in-from-bottom-6 duration-500">
+        {/* HEADER SECTION WITH ICON */}
+        <div className="flex items-center gap-4 mb-8">
+            <div className="bg-gradient-to-tr from-indigo-600 to-purple-600 p-3.5 rounded-2xl text-white shadow-xl shadow-indigo-100 ring-4 ring-white">
+                <Gift size={32} strokeWidth={2.5} />
             </div>
             <div>
-                <h3 className="font-black text-slate-800 text-lg">Redeem Gift Code</h3>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Enter your secret code below</p>
+                <h3 className="font-black text-slate-900 text-xl tracking-tight">Redeem Gift Code</h3>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.15em] mt-0.5 flex items-center gap-1">
+                   <Sparkles size={12} className="text-amber-400" /> Powered by NST AI Cloud
+                </p>
             </div>
         </div>
         
+        {/* INPUT AND BUTTON SECTION */}
         <div className="relative group">
+            <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors">
+                <Zap size={20} fill="currentColor" />
+            </div>
             <input 
                 type="text" 
-                placeholder="Ex: NST-FREE-100" 
+                placeholder="EX: NST-X92-PREMIUM" 
                 value={code}
                 onChange={e => setCode(e.target.value.toUpperCase())}
                 disabled={status === 'LOADING'}
-                className="w-full pl-6 pr-14 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-black text-slate-700 focus:outline-none focus:border-purple-500 focus:bg-white transition-all uppercase placeholder:font-medium placeholder:text-slate-300"
+                className="w-full pl-14 pr-16 py-5 bg-slate-50 border-2 border-slate-100 rounded-[24px] font-black text-slate-700 text-lg focus:outline-none focus:border-indigo-500 focus:bg-white transition-all uppercase placeholder:font-bold placeholder:text-slate-300 shadow-inner"
             />
             <button 
                 onClick={handleRedeem}
                 disabled={status === 'LOADING' || !code}
-                className="absolute right-2 top-2 bottom-2 bg-slate-900 text-white px-4 rounded-xl hover:bg-purple-600 disabled:opacity-50 transition-all active:scale-95 shadow-lg flex items-center justify-center min-w-[50px]"
+                className="absolute right-2.5 top-2.5 bottom-2.5 bg-slate-900 text-white px-6 rounded-[18px] hover:bg-indigo-600 disabled:opacity-50 transition-all active:scale-95 shadow-xl flex items-center justify-center min-w-[60px]"
             >
-                {status === 'LOADING' ? <Loader2 size={20} className="animate-spin" /> : <ArrowRight size={22} />}
+                {status === 'LOADING' ? (
+                    <Loader2 size={24} className="animate-spin" />
+                ) : (
+                    <ArrowRight size={24} strokeWidth={3} />
+                )}
             </button>
         </div>
 
-        {/* STATUS MESSAGES */}
-        {status === 'ERROR' && (
-            <div className="mt-4 flex items-center gap-2 text-red-500 text-xs font-black bg-red-50 p-3 rounded-xl border border-red-100 animate-in shake">
-                <AlertCircle size={16} /> {msg}
-            </div>
-        )}
-        
-        {status === 'SUCCESS' && (
-            <div className="mt-4 flex items-center gap-2 text-green-600 text-xs font-black bg-green-50 p-3 rounded-xl border border-green-100 animate-in zoom-in">
-                <CheckCircle size={16} /> {msg}
-            </div>
-        )}
+        {/* FEEDBACK MESSAGES (ERROR/SUCCESS) */}
+        <div className="mt-6 min-h-[48px]">
+            {status === 'ERROR' && (
+                <div className="flex items-center gap-3 text-red-600 text-sm font-black bg-red-50 p-4 rounded-2xl border border-red-100 animate-in shake-in duration-300">
+                    <AlertCircle size={20} />
+                    <span>{msg}</span>
+                </div>
+            )}
+            
+            {status === 'SUCCESS' && (
+                <div className="flex items-center gap-3 text-emerald-700 text-sm font-black bg-emerald-50 p-4 rounded-2xl border border-emerald-100 animate-in zoom-in-95 duration-300">
+                    <CheckCircle size={20} />
+                    <span>{msg}</span>
+                </div>
+            )}
+            
+            {status === 'IDLE' && !msg && (
+                <p className="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 leading-relaxed">
+                    Note: Gift codes are unique and can only be used once. 
+                    <br />Please double-check for typos.
+                </p>
+            )}
+        </div>
     </div>
   );
 };
