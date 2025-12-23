@@ -6,15 +6,19 @@ import { getAnalytics } from "firebase/analytics";
 
 // --- 1. Aapka Naya Firebase Configuration (students-app-deae5) ---
 const firebaseConfig = {
-  apiKey: "AIzaSyC7N3IOa7GRETNRBo8P-QKVFzg2bLqoEco",
-  authDomain: "students-app-deae5.firebaseapp.com",
-  databaseURL: "https://students-app-deae5-default-rtdb.firebaseio.com",
-  projectId: "students-app-deae5",
-  storageBucket: "students-app-deae5.firebasestorage.app",
-  messagingSenderId: "128267767708",
-  appId: "1:128267767708:web:08ed73b1563b2f3eb60259"
+  apiKey: "AIzaSyDcFkBP_jfuWAAW8NwUzO0UpcifIcfb6iM",
+  authDomain: "iic-nst.firebaseapp.com",
+  databaseURL: "https://iic-nst-default-rtdb.firebaseio.com",
+  projectId: "iic-nst",
+  storageBucket: "iic-nst.firebasestorage.app",
+  messagingSenderId: "984309241322",
+  appId: "1:984309241322:web:2687c7b06bd8da3ee64e93",
+  measurementId: "G-SEWN25VB6X"
 };
 
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 // --- 2. Initialization ---
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
