@@ -1,0 +1,105 @@
+
+> students@0.0.0 dev
+> vite
+
+
+  VITE v6.4.1  ready in 212 ms
+
+  ➜  Local:   http://localhost:5000/
+  ➜  Network: http://192.168.0.2:5000/
+6:57:32 AM [vite] (client) hmr update /components/AdminDashboard.tsx
+6:57:44 AM [vite] (client) hmr update /App.tsx
+7:07:20 AM [vite] (client) hmr update /components/StudentDashboard.tsx
+7:08:05 AM [vite] (client) hmr update /App.tsx
+7:08:19 AM [vite] (client) Pre-transform error: Failed to resolve import "./components/WeeklyTestView" from "App.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /app/App.tsx:23:31
+  16 |  import { LoadingOverlay } from "./components/LoadingOverlay";
+  17 |  import { StartupAd } from "./components/StartupAd";
+  18 |  import { WeeklyTestView } from "./components/WeeklyTestView";
+     |                                  ^
+  19 |  import { BrainCircuit, LogOut, Lock, FileText, EyeOff, WifiOff } from "lucide-react";
+  20 |  const TermsPopup = ({ onClose, text }) => /* @__PURE__ */ jsxDEV("div", { className: "fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-end md:items-center justify-center p-0 md:p-4 animate-in fade-in duration-300", children: /* @__PURE__ */ jsxDEV("div", { className: "bg-white w-full max-w-lg md:rounded-3xl rounded-t-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]", children: [
+7:08:19 AM [vite] Internal server error: Failed to resolve import "./components/WeeklyTestView" from "App.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /app/App.tsx:23:31
+  16 |  import { LoadingOverlay } from "./components/LoadingOverlay";
+  17 |  import { StartupAd } from "./components/StartupAd";
+  18 |  import { WeeklyTestView } from "./components/WeeklyTestView";
+     |                                  ^
+  19 |  import { BrainCircuit, LogOut, Lock, FileText, EyeOff, WifiOff } from "lucide-react";
+  20 |  const TermsPopup = ({ onClose, text }) => /* @__PURE__ */ jsxDEV("div", { className: "fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-end md:items-center justify-center p-0 md:p-4 animate-in fade-in duration-300", children: /* @__PURE__ */ jsxDEV("div", { className: "bg-white w-full max-w-lg md:rounded-3xl rounded-t-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]", children: [
+      at TransformPluginContext._formatLog (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42528:41)
+      at TransformPluginContext.error (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42525:16)
+      at normalizeUrl (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40504:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40623:37
+      at async Promise.all (index 16)
+      at async TransformPluginContext.transform (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40550:7)
+      at async EnvironmentPluginContainer.transform (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42323:18)
+      at async loadAndTransform (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:35739:27)
+      at async viteTransformMiddleware (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:37254:24)
+7:08:19 AM [vite] Internal server error: Failed to resolve import "./components/WeeklyTestView" from "App.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /app/App.tsx:23:31
+  16 |  import { LoadingOverlay } from "./components/LoadingOverlay";
+  17 |  import { StartupAd } from "./components/StartupAd";
+  18 |  import { WeeklyTestView } from "./components/WeeklyTestView";
+     |                                  ^
+  19 |  import { BrainCircuit, LogOut, Lock, FileText, EyeOff, WifiOff } from "lucide-react";
+  20 |  const TermsPopup = ({ onClose, text }) => /* @__PURE__ */ jsxDEV("div", { className: "fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-end md:items-center justify-center p-0 md:p-4 animate-in fade-in duration-300", children: /* @__PURE__ */ jsxDEV("div", { className: "bg-white w-full max-w-lg md:rounded-3xl rounded-t-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]", children: [
+      at TransformPluginContext._formatLog (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42528:41)
+      at TransformPluginContext.error (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42525:16)
+      at normalizeUrl (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40504:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40623:37
+      at async Promise.all (index 16)
+      at async TransformPluginContext.transform (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40550:7)
+      at async EnvironmentPluginContainer.transform (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42323:18)
+      at async loadAndTransform (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:35739:27)
+      at async viteTransformMiddleware (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:37254:24)
+7:08:49 AM [vite] Internal server error: Failed to resolve import "./components/WeeklyTestView" from "App.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /app/App.tsx:23:31
+  16 |  import { LoadingOverlay } from "./components/LoadingOverlay";
+  17 |  import { StartupAd } from "./components/StartupAd";
+  18 |  import { WeeklyTestView } from "./components/WeeklyTestView";
+     |                                  ^
+  19 |  import { BrainCircuit, LogOut, Lock, FileText, EyeOff, WifiOff } from "lucide-react";
+  20 |  const TermsPopup = ({ onClose, text }) => /* @__PURE__ */ jsxDEV("div", { className: "fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-end md:items-center justify-center p-0 md:p-4 animate-in fade-in duration-300", children: /* @__PURE__ */ jsxDEV("div", { className: "bg-white w-full max-w-lg md:rounded-3xl rounded-t-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]", children: [
+      at TransformPluginContext._formatLog (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42528:41)
+      at TransformPluginContext.error (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42525:16)
+      at normalizeUrl (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40504:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40623:37
+      at async Promise.all (index 16)
+      at async TransformPluginContext.transform (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40550:7)
+      at async EnvironmentPluginContainer.transform (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42323:18)
+      at async loadAndTransform (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:35739:27)
+      at async viteTransformMiddleware (file:///app/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:37254:24)
+7:11:38 AM [vite] (client) page reload components/WeeklyTestView.tsx
+11:40:01 AM [vite] (client) hmr update /components/Auth.tsx
+11:40:29 AM [vite] (client) hmr update /App.tsx
+11:41:22 AM [vite] (client) hmr update /components/AdminDashboard.tsx
+12:47:09 PM [vite] (client) hmr update /components/Auth.tsx
+12:47:09 PM [vite] (client) hmr update /components/Auth.tsx
+12:47:20 PM [vite] (client) hmr update /components/AdminDashboard.tsx
+1:14:56 PM [vite] (client) hmr update /components/StudentDashboard.tsx
+1:35:34 PM [vite] (client) hmr update /components/WelcomePopup.tsx
+1:35:58 PM [vite] (client) hmr update /components/StudentDashboard.tsx
+1:39:47 PM [vite] (client) hmr update /components/Auth.tsx
+1:40:05 PM [vite] (client) hmr update /components/StudentDashboard.tsx
+2:25:37 PM [vite] (client) hmr update /components/AdminDashboard.tsx
+2:26:08 PM [vite] (client) hmr update /components/ChapterSelection.tsx
+2:26:45 PM [vite] (client) hmr update /components/StudentDashboard.tsx
+2:27:18 PM [vite] (client) hmr update /components/StartupAd.tsx
+2:28:25 PM [vite] (client) hmr update /components/Leaderboard.tsx
+3:01:33 PM [vite] (client) hmr update /components/Auth.tsx
+3:02:12 PM [vite] (client) hmr update /components/StudentDashboard.tsx
+4:17:24 PM [vite] (client) hmr update /App.tsx, /components/AdminDashboard.tsx, /components/Auth.tsx, /components/SubjectSelection.tsx, /components/StudentDashboard.tsx
+4:37:37 PM [vite] (client) hmr update /App.tsx, /components/AdminDashboard.tsx
+4:38:53 PM [vite] (client) hmr update /App.tsx, /components/AdminDashboard.tsx, /components/Auth.tsx, /components/SubjectSelection.tsx, /components/StudentDashboard.tsx
+4:39:29 PM [vite] (client) hmr update /components/Auth.tsx
+4:42:08 PM [vite] (client) hmr update /App.tsx
+4:44:54 PM [vite] (client) hmr update /App.tsx, /components/AdminDashboard.tsx
+5:21:06 PM [vite] (client) hmr update /components/Auth.tsx
